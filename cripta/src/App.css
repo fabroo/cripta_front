@@ -36,12 +36,13 @@
 }
 .resultCard{
   width:200px;
+  height:300px !important;
   margin-left: 10rem;
   background-color:  #8E9DCC !important;
   cursor: default !important;
 }
 .card{
-  height: 300px;
+  height: 90%;
   background-color: #D1DCEE;
   border-radius: 5px;
   cursor: pointer;
@@ -64,11 +65,13 @@
   display: flex;
 }
 .operationBoard{
-  display:flex;
-  justify-content: space-between;
-  width: 450px;
-  align-items:center;
-  margin-bottom: 1rem;
+  display:grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    z-index: 999;
+    grid-column-gap: 15px;
+    grid-row-gap: 5px;
+    padding-bottom: 2.5rem;
 }
 .operation{
   font-size: 24px;
@@ -148,3 +151,92 @@
 .ml{
   margin-left: 1rem;
 }
+
+/*RESPONSIVE*/
+
+/*PHONE DISPLAY */
+@media (max-width: 600px) {
+  *{
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: none !important;
+
+  }
+  .tablero{
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width:70%;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    margin:2rem auto 0 auto;
+  }
+  .card{
+    height: 200px;
+  }
+  .container{
+    height: 40%;
+  }
+  .mainBoard{
+    display:flex;
+    flex-direction:column;
+    width: 100%;
+  }
+  .operationBoard{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width:70%;
+    z-index: 999;
+    grid-column-gap: 15px;
+    grid-row-gap: 5px;
+    margin-bottom: 5rem;
+  }
+  .resultCard{
+    margin-left: 0 ;
+    width: 70%;
+    height: 80px !important;
+    margin: 1.5rem auto 1rem auto;
+  }
+  .cardOperation{
+    width: 100%;
+    
+  }
+  .infoIcon{
+    width: 30px;
+  }
+  .infoBtn{
+    
+  }
+  .bottomContainer{
+    width: 100%;
+    height: 7vh;
+    background-color: #7D84B2;
+    color: rgb(241, 238, 238);
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    position: fixed;
+    border-top-right-radius: 15px;
+    bottom:0;
+    z-index: 9999;
+  }
+
+  .cardPressable:hover{
+    transform: scale(1);
+    background-color: #D1DCEE;
+  }
+
+.cardOperation:hover{
+    transform: scale(1);
+}
+
+.infoBtn:hover{
+  transform: scale(1);
+}
+
+ }

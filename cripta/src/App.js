@@ -8,7 +8,7 @@ function App() {
   const [cards, setCards] = useState([
     { valor: 1, palo: "espada" },
     { valor: 4, palo: "espada" },
-    { valor: 11, palo: "basto" },
+    { valor: 6, palo: "basto" },
     { valor: 12, palo: "oro" },
     { valor: 8, palo: "copa" },
   ]);
@@ -54,7 +54,7 @@ function App() {
           setCalculation("Correcto!");
         }
         else {
-          setCalculation("Llegaste a " + result + " pero debes llegar a " + cards[cards.length - 1].valor);
+          setCalculation(result + " :(");
         }
         setTimeout(() => {
           setCalculation("");
@@ -78,12 +78,12 @@ function App() {
       <Tablero
         operation={<>
           <div className="operationBoard">
-            <Operation handleChange={(val) => updateCalculation(val)} type="par_open" />
-            <Operation handleChange={(val) => updateCalculation(val)} type="par_close" />
-            <Operation handleChange={(val) => updateCalculation(val)} type="multiplicacion" />
-            <Operation handleChange={(val) => updateCalculation(val)} type="division" />
             <Operation handleChange={(val) => updateCalculation(val)} type="suma" />
             <Operation handleChange={(val) => updateCalculation(val)} type="resta" />
+            <Operation handleChange={(val) => updateCalculation(val)} type="multiplicacion" />
+            <Operation handleChange={(val) => updateCalculation(val)} type="division" />
+            <Operation handleChange={(val) => updateCalculation(val)} type="par_open" />
+            <Operation handleChange={(val) => updateCalculation(val)} type="par_close" />
             <Operation handleChange={() => calculateCripta()} type="igual" />
             <Operation handleChange={() => {
               setCalculation("");
