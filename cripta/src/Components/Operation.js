@@ -1,4 +1,5 @@
 import React from 'react'
+import { BsBackspace } from 'react-icons/bs';
 
 export default function Operation({ type, handleChange }) {
     let symbol = {
@@ -10,6 +11,7 @@ export default function Operation({ type, handleChange }) {
         'par_open': '(',
         'par_close': ')',
         'clear': 'CL',
+        'back': 'bck',
     }
     const renderOperation = () => {
         switch (type) {
@@ -29,6 +31,8 @@ export default function Operation({ type, handleChange }) {
                 return <p className="operation">=</p>
             case 'clear':
                 return <p className="operation">CL</p>
+            case 'back':
+                return <BsBackspace className='operation'/>
             default:
                 return <p className="operation">?</p>
 

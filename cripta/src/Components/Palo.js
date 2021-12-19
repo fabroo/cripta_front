@@ -5,20 +5,20 @@ import { AiFillGold } from 'react-icons/ai';
 
 
 
-export default function Palo({type, customStyle}) {
+export default function Palo({type, customStyle, size}) {
     
     const renderType = () =>{
         switch(type){
             case 'basto':
-                return <BsFillCupFill size={24}/>
+                return <BsFillCupFill size={size || 24}/>
             case 'espada':
-                return <GiBroadsword size={24}/>
+                return <GiBroadsword size={size || 24}/>
             case 'oro':
-                return <AiFillGold size={24}/>
+                return <AiFillGold size={size || 24}/>
             case 'copa':
-                return <GiWoodStick size={24}/>
+                return <GiWoodStick size={size || 24}/>
             default:
-                return <BsFillCupFill size={24}/>
+                return <BsFillCupFill size={size || 24}/>
         }
     }
 

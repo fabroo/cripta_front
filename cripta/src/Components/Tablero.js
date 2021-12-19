@@ -8,9 +8,8 @@ export default function Tablero({ children, operation, result }) {
                 <div className="tablero">
                     {children}
                 </div>
-                <div id="resultCard" className="card resultCard">
+                <div id="resultCard" className="resultCard">
                     {result}
-
                 </div>
             </div>
             {operation}
