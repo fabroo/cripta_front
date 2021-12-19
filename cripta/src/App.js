@@ -3,10 +3,12 @@ import Card from './Components/Card'
 import Tablero from './Components/Tablero'
 import Operation from './Components/Operation'
 import Info from './Components/Info'
-
+import Axios from 'axios'
+import axios from 'axios';
 
 function App() {
-  function checkIfDuplicateExists(arr) {
+
+  const checkIfDuplicateExists = (arr) => {
     return new Set(arr).size !== arr.length
   }
 
@@ -27,11 +29,12 @@ function App() {
   }
 
   const [cards, setCards] = useState(randomCards(5));
-
+  const URL = 'https://cripta.herokuapp.com';
 
   const [pressed, setPressed] = useState([false, false, false, false]);
   const [calculation, setCalculation] = useState("");
   const [lastType, setLastType] = useState("");
+  const [counter, setCounter] = useState(0);
 
   const pressCard = (idx) => {
     if (!pressed[idx] && lastType != "num") {
@@ -57,7 +60,7 @@ function App() {
     }
   }
 
-  const calculateCripta = () => {
+  const calculateCripta = async () => {
     if (pressed.includes(false)) {
       alert("No se puede calcular hasta que todas las cartas esten presionadas")
     }
@@ -67,16 +70,35 @@ function App() {
 
         if (result == cards[cards.length - 1].valor) {
           setCalculation("Correcto!");
+          setCounter(counter + 1);
+          let res = await axios.post(`${URL}/newCombination`, {
+            cards: [cards[0].valor, cards[1].valor, cards[2].valor, cards[3].valor],
+            target: cards[4].valor,
+            combination: calculation
+          })
+
+          if(!res.data.error){
+            alert("Combinacion guardada!");
+          }
+          else{
+            alert("Error al guardar la combinacion");
+          }
+          
+          setTimeout(() => {
+            setCalculation("");
+            setPressed([false, false, false, false]);
+            setLastType("result");
+            setCards(randomCards(5)); 
+          }, 2000);
         }
         else {
           setCalculation(result + " :(");
+          setTimeout(() => {
+            setCalculation("");
+            setPressed([false, false, false, false]);
+            setLastType("result");
+          }, 2000);
         }
-        setTimeout(() => {
-          setCalculation("");
-          setPressed([false, false, false, false]);
-          setLastType("result");
-          setCards(randomCards(5));
-        }, 2000);
 
       } catch (error) {
         alert("Error en la operacion")
@@ -126,6 +148,10 @@ function App() {
       </Tablero>
       <div className="bottomContainer">
         <p className="calculation">{calculation ? calculation : `Target: ${cards[cards.length - 1].valor}`}</p>
+      </div>
+
+      <div className="counter">
+        {counter > 0 ? `Completaste ${counter} seguidas` : ""}
       </div>
     </>
   );

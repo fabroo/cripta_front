@@ -152,6 +152,17 @@
   margin-left: 1rem;
 }
 
+
+.counter{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 20px;
+}
+.counter p {
+  font-size: 40px;
+  font-weight: 700;
+}
 /*RESPONSIVE*/
 
 /*PHONE DISPLAY */
