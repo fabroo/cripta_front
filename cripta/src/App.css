@@ -77,7 +77,7 @@
 }
 .operationBoard{
   display:grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     z-index: 999;
     grid-column-gap: 15px;

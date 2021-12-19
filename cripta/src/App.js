@@ -79,6 +79,27 @@ function App() {
     }
   }
 
+  const shuffle = () => {
+    let randomIdx = Math.floor(Math.random() * 3)
+    let newCard = randomCards(1)[0];
+    let temp = cards;
+    temp[randomIdx] = newCard;
+    if (checkIfDuplicateExists(temp.map(carta => carta.valor + carta.palo))) {
+      shuffle()
+    }
+    else {
+      setCards(temp);
+      setSteps([])
+      setCalculation("")
+      setPressed([false, false, false, false])
+      setDuplicateIdxs([])
+      setCounter(0)
+      setIsFlipped(false);
+      setTimeout(() => {
+        setIsFlipped(true);
+      }, 500)
+    }
+  }
 
   const pressCard = (idx) => {
     if (!pressed[idx] && lastType != "num") {
@@ -176,11 +197,12 @@ function App() {
             <Operation handleChange={(val) => updateCalculation(val)} type="par_close" />
             <Operation handleChange={() => calculateCripta()} type="igual" />
             <Operation handleChange={() => removeLast()} type="back" />
-            {/* <Operation handleChange={() => {
+            <Operation handleChange={() => shuffle()} type="shuffle" />
+            <Operation handleChange={() => {
               setCalculation("");
               setPressed([false, false, false, false]);
               setLastType("result");
-            }} type="clear" /> */}
+            }} type="clear" />
           </div>
         </>}
 

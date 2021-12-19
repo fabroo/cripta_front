@@ -1,5 +1,13 @@
 import React from 'react'
+
 import { BsBackspace } from 'react-icons/bs';
+import { MdOutlineChangeCircle } from 'react-icons/md';
+import { AiOutlineClear } from 'react-icons/ai';
+import { HiOutlineMinus } from 'react-icons/hi';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { TiTimes } from 'react-icons/ti';
+import { RiDivideLine } from 'react-icons/ri';
+
 
 export default function Operation({ type, handleChange }) {
     let symbol = {
@@ -10,29 +18,32 @@ export default function Operation({ type, handleChange }) {
         'igual': '=',
         'par_open': '(',
         'par_close': ')',
-        'clear': 'CL',
+        'clear': 'cl',
         'back': 'bck',
+        'shuffle': 'sf',
     }
     const renderOperation = () => {
         switch (type) {
             case 'multiplicacion':
-                return <p className="operation">×</p>
+                return <TiTimes className='operation' />
             case 'division':
-                return <p className="operation">÷</p>
+                return <RiDivideLine className='operation' />
             case 'suma':
-                return <p className="operation">+</p>
+                return <AiOutlinePlus className='operation' />
             case 'resta':
-                return <p className="operation">-</p>
+                return <HiOutlineMinus className='operation' />
             case 'par_open':
                 return <p className="operation">(</p>
             case 'par_close':
                 return <p className="operation">)</p>
             case 'igual':
                 return <p className="operation">=</p>
-            case 'clear':
-                return <p className="operation">CL</p>
             case 'back':
-                return <BsBackspace className='operation'/>
+                return <BsBackspace className='operation' />
+            case 'clear':
+                return <AiOutlineClear className='operation' />
+            case 'shuffle':
+                return <MdOutlineChangeCircle className='operation' />
             default:
                 return <p className="operation">?</p>
 
@@ -40,7 +51,7 @@ export default function Operation({ type, handleChange }) {
     }
 
     return (
-        <div className="cardOperation"  onClick={() => handleChange(symbol[type])}>
+        <div className="cardOperation" onClick={() => handleChange(symbol[type])}>
             {renderOperation()}
         </div>
     )
