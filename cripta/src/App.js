@@ -46,6 +46,8 @@ function App() {
   const [processed, setProcessed] = useState("");
   const [specialCard, setSpecialCard] = useState(false);
   const [keyboardActive, setKeyboardActive] = useState(false);
+  const operators = /[*+/()-]/g;
+
   useEffect(() => {
     let flipCards = setTimeout(() => setIsFlipped(true), 500);
     return () => {
@@ -54,7 +56,6 @@ function App() {
   }, [])
 
   const handleChange = (e) => {
-    let operators = "[\*\+/\(\)-]";
     let numbers = cards.map(card => card.valor).slice(0, 4);
     let input = e.target.value;
     let lastNumber = "";
@@ -69,7 +70,7 @@ function App() {
     }
     lastNumber = lastNumber.split("").reverse().join("");
 
-    if (lastNumber == 1 && !specialCard) {
+    if (lastNumber == 1 && !specialCard && cardsWithOne()) {
       setSpecialCard(true);
       setProcessed(input)
       return;
@@ -80,7 +81,7 @@ function App() {
       return;
     }
 
-    let countInput = input.split(/[\*\+/\(\)-]/g).map(item => parseInt(item) == parseInt(lastNumber)).filter(Boolean).length;
+    let countInput = input.split(operators).map(item => parseInt(item) == parseInt(lastNumber)).filter(Boolean).length;
     let numbersToStrings = numbers.map(number => number.toString());
     let countNumbers = 0;
 
@@ -140,6 +141,9 @@ function App() {
       }
     }
   }
+
+  const cardsWithOne = () => [cards[0].valor, cards[1].valor, cards[2].valor, cards[3].valor].filter(v=> v==1 || v> 9).length != 0
+  
 
   const shuffle = () => {
     let randomIdx = Math.floor(Math.random() * 3)
@@ -204,9 +208,9 @@ function App() {
           setCounter(counter + 1);
 
           let combination = from == "keyboard" ? processed : calculation;
-          console.log("combination", combination.split(/[\+\*\/\(\)-]/g).map(item => item.length > 0).filter(Boolean).length)
+          console.log("combination", combination.split(/[+*/()-]/g).map(item => item.length > 0).filter(Boolean).length)
 
-          if (combination.split(/[\+\*\/\(\)-]/g).map(item => item.length > 0).filter(Boolean).length != 4) {
+          if (combination.split(/[+*/()-]/g).map(item => item.length > 0).filter(Boolean).length != 4) {
             throw "Error en la combinacion"
           }
 
@@ -333,9 +337,9 @@ function App() {
             setKeyboardActive(!keyboardActive);
             setProcessed("");
             setCalculation("");
-            setPressed([false,false,false,false]);
+            setPressed([false, false, false, false]);
             setLastType("result");
-        }} />
+          }} />
         <p id="calculation" className="calculation">{calculation ? calculation : `Target: ${cards[cards.length - 1].valor}`}</p>
       </div>
 
