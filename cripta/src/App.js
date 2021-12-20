@@ -6,8 +6,14 @@ import Info from './Components/Info'
 import axios from 'axios';
 import ReactCardFlip from 'react-card-flip';
 import Palo from './Components/Palo'
+import Toggle from 'react-toggle'
+import { BsKeyboard } from 'react-icons/bs'
+import { BiJoystickButton } from 'react-icons/bi'
+import { AiOutlineSend } from 'react-icons/ai'
+import "react-toggle/style.css"
 
 function App() {
+  const URL = 'https://cripta.herokuapp.com';
 
   const checkIfDuplicateExists = (arr) => {
     return new Set(arr).size !== arr.length
@@ -29,8 +35,6 @@ function App() {
     return cards;
   }
 
-  const URL = 'https://cripta.herokuapp.com';
-
   const [cards, setCards] = useState(randomCards(5));
   const [pressed, setPressed] = useState([false, false, false, false]);
   const [calculation, setCalculation] = useState("");
@@ -39,7 +43,9 @@ function App() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [steps, setSteps] = useState([]);
   const [duplicateIdxs, setDuplicateIdxs] = useState([]);
-
+  const [processed, setProcessed] = useState("");
+  const [specialCard, setSpecialCard] = useState(false);
+  const [keyboardActive, setKeyboardActive] = useState(false);
   useEffect(() => {
     let flipCards = setTimeout(() => setIsFlipped(true), 500);
     return () => {
@@ -47,18 +53,74 @@ function App() {
     }
   }, [])
 
+  const handleChange = (e) => {
+    let operators = "[\*\+/\(\)-]";
+    let numbers = cards.map(card => card.valor).slice(0, 4);
+    let input = e.target.value;
+    let lastNumber = "";
+
+    for (let char = input.length - 1; char >= 0; char--) {
+      if (!input[char].match(operators)) {
+        lastNumber += input[char];
+      }
+      else {
+        break;
+      }
+    }
+    lastNumber = lastNumber.split("").reverse().join("");
+
+    if (lastNumber == 1 && !specialCard) {
+      setSpecialCard(true);
+      setProcessed(input)
+      return;
+    }
+    else if (lastNumber == 1 && specialCard) {
+      setSpecialCard(false);
+      setProcessed(input)
+      return;
+    }
+
+    let countInput = input.split(/[\*\+/\(\)-]/g).map(item => parseInt(item) == parseInt(lastNumber)).filter(Boolean).length;
+    let numbersToStrings = numbers.map(number => number.toString());
+    let countNumbers = 0;
+
+    for (let nS = 0; nS < numbersToStrings.length; nS++) {
+      countNumbers = numbersToStrings[nS].includes(lastNumber) ? countNumbers += 1 : countNumbers;
+    }
+
+    lastNumber = parseInt(lastNumber);
+
+    // en el else if se le puede poner un && !input[input.length - 2]?.match(/[\+\/\*-]/g)
+    if ((specialCard && (lastNumber == 1 || lastNumber == 2 || lastNumber == 0))) {
+      setSpecialCard(false);
+      setProcessed(input);
+    }
+    else if ((input[input.length - 1]?.match(operators)) || (numbers.includes(parseInt(lastNumber)) && (countInput <= countNumbers)) || !input[input.length - 1]) {
+      setProcessed(input);
+    }
+  }
+
   const removeLast = () => {
-    console.log("removed")
-    console.log("STEPS", steps)
     if (steps.length == 0) {
       alert("Ni empezaste chanta")
     }
     else {
+      let last_type;
+
+      if (steps[steps.length - 2]) {
+        last_type = steps[steps.length - 2].type
+      }
+      else {
+        last_type = null
+      }
+
       let last_step = steps.pop()
-      setLastType(last_step.type)
+
+      setLastType(last_type)
+
       if (last_step.type == "num") {
-        for (let i = 0; i < cards.length - 1; i++) {
-          if (cards[i].valor == last_step.valor) {
+        for (let i = 0; i < 4; i++) {
+          if (cards[i].valor == last_step.valor && pressed[i] == true) {
             if (!duplicateIdxs.includes(i)) {
               let temp = pressed;
               temp[i] = false;
@@ -102,7 +164,7 @@ function App() {
   }
 
   const pressCard = (idx) => {
-    if (!pressed[idx] && lastType != "num") {
+    if (!pressed[idx] && lastType != "num" && !keyboardActive) {
       let temp = pressed;
       temp[idx] = true;
       setPressed(temp);
@@ -129,21 +191,29 @@ function App() {
     }
   }
 
-  const calculateCripta = async () => {
-    if (pressed.includes(false)) {
-      alert("No se puede calcular hasta que todas las cartas esten presionadas")
+  const calculateCripta = async (from) => {
+    if ((!from == "keyboard" && pressed.includes(false)) || (from == "keyboard" && processed.length == 0)) {
+      alert("Completá la partida campeón")
     }
     else {
       try {
-        let result = eval(calculation);
+        let result = eval(from == "keyboard" ? processed : calculation);
 
         if (result == cards[cards.length - 1].valor) {
           setCalculation("Correcto!");
           setCounter(counter + 1);
+
+          let combination = from == "keyboard" ? processed : calculation;
+          console.log("combination", combination.split(/[\+\*\/\(\)-]/g).map(item => item.length > 0).filter(Boolean).length)
+
+          if (combination.split(/[\+\*\/\(\)-]/g).map(item => item.length > 0).filter(Boolean).length != 4) {
+            throw "Error en la combinacion"
+          }
+
           let res = await axios.post(`${URL}/newCombination`, {
             cards: [cards[0].valor, cards[1].valor, cards[2].valor, cards[3].valor],
             target: cards[4].valor,
-            combination: calculation
+            combination
           })
 
           if (!res.data.error) {
@@ -158,6 +228,7 @@ function App() {
             setPressed([false, false, false, false]);
             setLastType("result");
             setIsFlipped(false);
+            setProcessed("");
             setTimeout(() => {
               setCards(randomCards(5));
               setIsFlipped(true);
@@ -169,12 +240,14 @@ function App() {
           setTimeout(() => {
             setCalculation("");
             setPressed([false, false, false, false]);
+            setProcessed("");
             setLastType("result");
           }, 2000);
         }
 
       } catch (error) {
-        alert("Error en la operacion")
+        console.log(error)
+        alert("Fijate que hayas usado los operadores correctamente o que la combinacion sea correcta")
         setCalculation("");
         setPressed([false, false, false, false]);
         setLastType("result");
@@ -188,22 +261,33 @@ function App() {
       <Info />
       <Tablero
         operation={<>
-          <div className="operationBoard">
-            <Operation handleChange={(val) => updateCalculation(val)} type="suma" />
-            <Operation handleChange={(val) => updateCalculation(val)} type="resta" />
-            <Operation handleChange={(val) => updateCalculation(val)} type="multiplicacion" />
-            <Operation handleChange={(val) => updateCalculation(val)} type="division" />
-            <Operation handleChange={(val) => updateCalculation(val)} type="par_open" />
-            <Operation handleChange={(val) => updateCalculation(val)} type="par_close" />
-            <Operation handleChange={() => calculateCripta()} type="igual" />
-            <Operation handleChange={() => removeLast()} type="back" />
-            <Operation handleChange={() => shuffle()} type="shuffle" />
-            <Operation handleChange={() => {
-              setCalculation("");
-              setPressed([false, false, false, false]);
-              setLastType("result");
-            }} type="clear" />
-          </div>
+          {keyboardActive ? (
+            <div className="keyboardBoard">
+              <input className="keyboard" value={processed} onChange={(e) => handleChange(e)} type="text" placeholder="a * b / c..." />
+              <div onClick={() => calculateCripta("keyboard")} className="submit">
+                <AiOutlineSend size={24} />
+              </div>
+            </div>
+          ) : (<div className="operationBoard">
+            <div className="firstRow">
+              <Operation handleChange={(val) => updateCalculation(val)} type="suma" />
+              <Operation handleChange={(val) => updateCalculation(val)} type="resta" />
+              <Operation handleChange={(val) => updateCalculation(val)} type="multiplicacion" />
+              <Operation handleChange={(val) => updateCalculation(val)} type="division" />
+              <Operation handleChange={(val) => updateCalculation(val)} type="par_open" />
+              <Operation handleChange={(val) => updateCalculation(val)} type="par_close" />
+            </div>
+            <div className="secondRow">
+              <Operation handleChange={() => calculateCripta()} type="igual" />
+              <Operation handleChange={() => removeLast()} type="back" />
+              <Operation handleChange={() => shuffle()} type="shuffle" />
+              <Operation handleChange={() => {
+                setCalculation("");
+                setPressed([false, false, false, false]);
+                setLastType("result");
+              }} type="clear" />
+            </div>
+          </div>)}
         </>}
 
         result={
@@ -238,12 +322,23 @@ function App() {
       </Tablero>
 
       <div className="bottomContainer">
-        <p className="calculation">{calculation ? calculation : `Target: ${cards[cards.length - 1].valor}`}</p>
+        <Toggle
+          defaultChecked={keyboardActive}
+          icons={{
+            checked: <BsKeyboard />,
+            unchecked: <BiJoystickButton />,
+          }}
+          className='toggle'
+          onChange={() => {
+            setKeyboardActive(!keyboardActive);
+            setProcessed("");
+            setCalculation("");
+            setPressed([false,false,false,false]);
+            setLastType("result");
+        }} />
+        <p id="calculation" className="calculation">{calculation ? calculation : `Target: ${cards[cards.length - 1].valor}`}</p>
       </div>
-      {/* 
-      <div className="counter">
-        {counter > 0 ? `Completaste ${counter} seguidas` : ""}
-      </div> */}
+
     </>
   );
 }

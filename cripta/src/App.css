@@ -4,7 +4,17 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: none !important;
+
 }
+
 
 .tablero{
   display:grid;
@@ -76,18 +86,62 @@
   display: flex;
 }
 .operationBoard{
-  display:grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    display:flex;
     z-index: 999;
-    grid-column-gap: 15px;
-    grid-row-gap: 5px;
     padding-bottom: 2.5rem;
+    flex-direction: column;
+    width: 350px;
+    align-items: center;
+    justify-content: center
+  }
+  .firstRow, .secondRow{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+.secondRow{
+  margin-top: .5rem;
+  width: 70%;
 }
 .operation{
   font-size: 24px;
   margin:auto;
 
+}
+.keyboardBoard{
+  display:flex;
+  justify-content: center;
+  align-items:center;
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+}
+.submit{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  background-color: #D9DBF1;
+  cursor: pointer;
+  display: flex;
+  transition: all .3s;
+  justify-content: center;
+  align-items:center;
+  margin-left: 1rem;
+}
+.submit:hover{
+  background-color: #8E9DCC;
+  transform:scale(1.1);
+}
+
+.keyboard{
+  width: 300px;
+  height:50px;
+  border-radius: 25px;
+  border:3px solid #D9DBF1;
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
 }
 .valor{
   position: absolute;
@@ -145,17 +199,19 @@
   right: 0;
   border-top-left-radius: 15px;
   width: 30%;
-  height:80px;
+  height:100px;
   background-color: #7D84B2;
   color: rgb(241, 238, 238);
   display: flex;
   justify-content: center;
   align-items:center;
+  flex-direction: column;
 }
 
 .calculation{
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 500;
+  margin-top: 1rem;
 }
 
 .infoBtn:hover{
@@ -191,17 +247,7 @@
 
 /*PHONE DISPLAY */
 @media (max-width: 600px) {
-  *{
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    outline: none !important;
-
-  }
+  
 
   .resultCardUnFlipped{
     height: 80px !important;
