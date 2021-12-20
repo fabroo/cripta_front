@@ -48,11 +48,26 @@ function App() {
   const [keyboardActive, setKeyboardActive] = useState(false);
   useEffect(() => {
     let flipCards = setTimeout(() => setIsFlipped(true), 500);
+    
     return () => {
       clearTimeout(flipCards);
     }
   }, [])
-
+  
+  const onKeyPress = (e) =>{
+    let numbers =  cards.map(c=> c.valor.toString()).slice(0,4)
+    if(e.key.match(operators)) {
+      updateCalculation(e.key)
+    } else if (numbers.includes(e.key)){
+      var idx = cards.slice(0,4).findIndex(v=>v.valor.toString()==e.key)
+      pressCard(idx)
+    } else if (e.keyCode == 8){
+      removeLast()
+    }
+    
+  }
+  //cuando esta afuera del useEffect, los simbolos funcionan, pero poner cualquier numero reinicia los steps.
+  document.addEventListener("keyup", onKeyPress, false);
   const handleChange = (e) => {
     let operators = "[\*\+/\(\)-]";
     let numbers = cards.map(card => card.valor).slice(0, 4);
@@ -67,6 +82,8 @@ function App() {
         break;
       }
     }
+    console.log("INPUT", input)
+    console.log("LASTNUMBER", lastNumber)
     lastNumber = lastNumber.split("").reverse().join("");
 
     if (lastNumber == 1 && !specialCard) {
@@ -165,13 +182,16 @@ function App() {
 
   const pressCard = (idx) => {
     if (!pressed[idx] && lastType != "num" && !keyboardActive) {
+      alert("ayo")
       let temp = pressed;
       temp[idx] = true;
       setPressed(temp);
       setLastType("num");
       setSteps([...steps, { type: "num", valor: cards[idx].valor }]);
       setCalculation(calculation + cards[idx].valor + " ");
+      console.log("Steps", steps)
     }
+    
   }
   const updateCalculation = (val) => {
     if (val == "(" && lastType != "num") {
@@ -189,6 +209,7 @@ function App() {
       setCalculation(calculation + val + " ");
       setLastType("op");
     }
+    console.log("Steps", steps)
   }
 
   const calculateCripta = async (from) => {
