@@ -46,10 +46,14 @@ function App() {
   const [processed, setProcessed] = useState("");
   const [specialCard, setSpecialCard] = useState(false);
   const [keyboardActive, setKeyboardActive] = useState(false);
+  const [startTime, setStartTime] = useState(null)
   const operators = /[*+/()-]/g;
 
   useEffect(() => {
-    let flipCards = setTimeout(() => setIsFlipped(true), 500);
+    let flipCards = setTimeout(() => {
+      setStartTime(Date.now())
+      setIsFlipped(true)
+    }, 500);
     return () => {
       clearTimeout(flipCards);
     }
@@ -163,7 +167,9 @@ function App() {
       setIsFlipped(false);
       setTimeout(() => {
         setIsFlipped(true);
+        setStartTime(Date.now())
       }, 500)
+      
     }
   }
 
@@ -204,7 +210,10 @@ function App() {
         let result = eval(from == "keyboard" ? processed : calculation);
 
         if (result == cards[cards.length - 1].valor) {
-          setCalculation("Correcto!");
+          console.log(startTime)
+          console.log(Date.now())
+          var n = Math.round((Date.now()- startTime) / 1000)
+          setCalculation("Correcto! Terminaste en " + n + " segundos!");
           setCounter(counter + 1);
 
           let combination = from == "keyboard" ? processed : calculation;
@@ -235,6 +244,7 @@ function App() {
             setProcessed("");
             setTimeout(() => {
               setCards(randomCards(5));
+              setStartTime(Date.now())
               setIsFlipped(true);
             }, 500)
           }, 2000);
