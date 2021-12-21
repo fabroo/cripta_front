@@ -1,0 +1,61 @@
+.resultCard{
+    width:200px;
+    height:300px !important;
+    margin-left: 10rem;
+    cursor: default !important;
+}
+.card{
+    background-color: #D1DCEE;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .3s;
+    position: relative;
+    justify-content: center;
+    align-items:center;
+}
+.resultCardUnFlipped{
+    background-color:#8E9DCC;
+    height:300px;
+    display: flex;
+    justify-content: "center";
+    align-items: "center";
+}
+.resultCardFlipped{
+    border-radius:5px;
+    height: 300px;
+    background-color:#8E9DCC 
+}
+.cardOperation{
+    height: 50px;
+    background-color: #D9DBF1;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .3s;
+    justify-content: center;
+    align-items:center;
+    text-align: center;
+    width: 50px;
+    display: flex;
+}
+.cardUnFlipped{
+    height:250px;
+    display: flex;
+    justify-content: "center";
+    align-items: "center" 
+}
+.cardFlipped{
+    height: 250px 
+}
+.typeUnFlipped{
+    width: 40px;
+}
+.cardNotPressable{
+    background-color:#C2C7DF;
+}
+.cardPressable:hover{
+    transform: scale(1.01);
+    background-color: #CAD2E7;
+}
+.cardOperation:hover{
+    transform: scale(1.15);
+}

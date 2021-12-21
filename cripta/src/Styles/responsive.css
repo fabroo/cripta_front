@@ -1,0 +1,93 @@
+/*PHONE DISPLAY*/
+@media (max-width: 800px ) {
+    .resultCardUnFlipped{
+        height: 80px !important;
+   }
+    .typeUnFlipped{
+        width: 30px;
+   }
+    .tablero{
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        width:70%;
+        grid-column-gap: 10px;
+        grid-row-gap: 10px;
+        margin:2rem auto 0 auto;
+   }
+    .card{
+        height: 200px;
+   }
+    .container{
+        height: 40%;
+   }
+    .mainBoard{
+        display:flex;
+        flex-direction:column;
+        width: 100%;
+   }
+    .firstRow{
+        width: 90%;
+   }
+    .secondRow{
+        width: 60%;
+   }
+    .operationBoard{
+        display: flex;
+        flex-direction: column;
+        width:100%;
+        z-index: 999;
+        height: 100px;
+        margin-bottom: 5rem;
+   }
+    .resultCard{
+        margin-left: 0 ;
+        width: 70%;
+        height: 80px !important;
+        margin: 1.5rem auto 1.5rem auto;
+   }
+    .resultCardFlipped{
+        height: 80px !important;
+   }
+    .cardUnFlipped{
+        height: 200px;
+   }
+    .cardFlipped{
+        height: 200px;
+   }
+    .infoIcon{
+        width: 35px;
+   }
+    .infoBtn{
+        margin: 5px;
+   }
+    .toggleBtn{
+        display: none;
+   }
+    .topContainer{
+        margin-right: 10px;
+        margin-top: 10px;
+   }
+    .bottomContainer{
+        width: 100%;
+        height: 7vh;
+        background-color: #7D84B2;
+        color: rgb(241, 238, 238);
+        display: flex;
+        justify-content: center;
+        align-items:center;
+        position: fixed;
+        border-top-right-radius: 15px;
+        bottom:0;
+        z-index: 9999;
+   }
+    .cardPressable:hover{
+        transform: scale(1);
+        background-color: #D1DCEE;
+   }
+    .cardOperation:hover{
+        transform: scale(1);
+   }
+    .infoBtn:hover{
+        transform: scale(1);
+   }
+}

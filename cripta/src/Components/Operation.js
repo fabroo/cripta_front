@@ -9,7 +9,7 @@ import { TiTimes } from 'react-icons/ti';
 import { RiDivideLine } from 'react-icons/ri';
 
 
-export default function Operation({ type, handleChange }) {
+export default function Operation({ type, handleChange, className }) {
     let symbol = {
         'multiplicacion': '*',
         'division': '/',
@@ -51,7 +51,7 @@ export default function Operation({ type, handleChange }) {
     }
 
     return (
-        <div className="cardOperation" onClick={() => handleChange(symbol[type])}>
+        <div className={`cardOperation ${className}`} onClick={() => handleChange(symbol[type])}>
             {renderOperation()}
         </div>
     )
