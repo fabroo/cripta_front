@@ -33,13 +33,19 @@ export default class AppClass extends Component {
       startTime: null,
       operators: /[*+/()-]/g,
       URL: "https://cripta.herokuapp.com",
+      keybinds: {
+        "r": this.shuffle,
+        "c":this.resetState,
+        "k":this.handleKeyboard,
+        "backspace":this.removeLast,
+        "enter":this.calculateCripta
+      }
     };
   }
   componentDidMount() {
     this.setState({
       cards: randomCards(5),
     });
-    console.log("component did mount");
 
     window.addEventListener("resize", () => {
       if (window.innerWidth <= 800) {
@@ -49,17 +55,41 @@ export default class AppClass extends Component {
       }
     });
 
-    this.timer = setInterval(
-      () =>
+    window.addEventListener('keydown', this.handleKeybind, false)
+
+    this.timer = setTimeout(() => {
+        var d = Date.now()
         this.setState({
-          startTime: Date.now(),
+          startTime: d,
           isFlipped: true,
-        }),
-      500
-    );
+        })
+
+      },
+          500
+      );
   }
   componentWillUnmount() {
     clearInterval(this.timer);
+    window.removeEventListener('keydown')
+  }
+
+  handleKeybind = (e) =>{
+    var k = e.key.toLowerCase()
+    if(k in this.state.keybinds){
+      var f = this.state.keybinds[k]
+
+      if(f == this.removeLast || f == this.resetState){
+        if(!this.state.keyboardActive) f()
+      } else if(f==this.calculateCripta) f('keyboard') 
+      else f()
+    }
+  }
+
+  handleKeyboard = () =>{
+    this.setState(prevState=>({
+      keyboardActive: !prevState.keyboardActive
+    }))
+    document.getElementById("kb").focus();
   }
 
   handleChange = (e) => {
@@ -183,7 +213,6 @@ export default class AppClass extends Component {
       lastType: "result",
       processed: "",
       duplicateIdxs: [],
-      isFlipped: false,
       counter: 0,
       calculation: "",
     });
@@ -203,9 +232,10 @@ export default class AppClass extends Component {
       this.resetState();
 
       setTimeout(() => {
+        var d = Date.now()
         this.setState({
           isFlipped: true,
-          startTime: Date.now(),
+          startTime: d,
         });
       }, 1000);
     }
@@ -288,7 +318,7 @@ export default class AppClass extends Component {
         if (result == this.state.cards[this.state.cards.length - 1].valor) {
           var n = Math.round((Date.now() - this.state.startTime) / 1000);
           this.setState({
-            calculation: "Correcto! Termiaste en " + n + " s",
+            calculation: "Correcto! Terminaste en " + n + " s",
             counter: this.state.counter + 1,
           });
 
@@ -325,11 +355,12 @@ export default class AppClass extends Component {
 
           setTimeout(() => {
             this.resetState();
-
+            this.setState({isFlipped:false})
             setTimeout(() => {
+              var d = Date.now()
               this.setState({
                 cards: randomCards(5),
-                startTime: Date.now(),
+                startTime: d,
                 isFlipped: true,
               });
             }, 1000);
@@ -388,6 +419,7 @@ export default class AppClass extends Component {
                   <div className="keyboardBoard">
                     <input
                       className="keyboard"
+                      id="kb"
                       value={this.state.processed}
                       onChange={(e) => this.handleChange(e)}
                       type="text"
@@ -396,7 +428,7 @@ export default class AppClass extends Component {
                     <Operation
                       handleChange={() => this.shuffle()}
                       type="shuffle"
-                    className="round"
+                      className="round"
                     />
 
                     <div
@@ -491,11 +523,10 @@ export default class AppClass extends Component {
                       <Palo className="typeUnFlipped" type={card.palo} />
                     </div>
                     <div
-                      className={`card ${
-                        !this.state.pressed[idx]
+                      className={`card ${!this.state.pressed[idx]
                           ? "cardPressable"
                           : "cardNotPressable"
-                      }`}
+                        }`}
                       onClick={() => this.pressCard(idx)}
                     >
                       <div className="cardFlipped">
@@ -514,9 +545,8 @@ export default class AppClass extends Component {
             <p id="calculation" className="calculation">
               {this.state.calculation
                 ? this.state.calculation
-                : `Target: ${
-                    this.state.cards[this.state.cards.length - 1].valor
-                  }`}
+                : `Target: ${this.state.cards[this.state.cards.length - 1].valor
+                }`}
             </p>
           </div>
         )}
