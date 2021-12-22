@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import Card from "./Components/Card";
-import Tablero from "./Components/Tablero";
-import Operation from "./Components/Operation";
-import Info from "./Components/Info";
+import Card from "./Card";
+import Tablero from "./Tablero";
+import Operation from "./Operation";
+import Info from "./Info";
 import axios from "axios";
 import ReactCardFlip from "react-card-flip";
-import Palo from "./Components/Palo";
+import Palo from "./Palo";
 import { BsKeyboard } from "react-icons/bs";
 import { BiJoystickButton } from "react-icons/bi";
 import { AiOutlineSend } from "react-icons/ai";
@@ -13,7 +13,13 @@ import {
   randomCards,
   checkIfDuplicateExists,
   cardsWithOne,
-} from "./Utils/functions";
+} from "../Utils/functions";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+const notify = (msg) =>
+  toast(msg, {
+    autoClose: 3000,
+  });
 
 export default class AppClass extends Component {
   constructor(props) {
@@ -34,12 +40,12 @@ export default class AppClass extends Component {
       operators: /[*+/()-]/g,
       URL: "https://cripta.herokuapp.com",
       keybinds: {
-        "r": this.shuffle,
-        "c":this.resetState,
-        "k":this.handleKeyboard,
-        "backspace":this.removeLast,
-        "enter":this.calculateCripta
-      }
+        r: this.shuffle,
+        c: this.resetState,
+        k: this.handleKeyboard,
+        backspace: this.removeLast,
+        enter: this.calculateCripta,
+      },
     };
   }
   componentDidMount() {
@@ -55,42 +61,40 @@ export default class AppClass extends Component {
       }
     });
 
-    window.addEventListener('keydown', this.handleKeybind, false)
+    window.addEventListener("keydown", this.handleKeybind, false);
 
     this.timer = setTimeout(() => {
-        var d = Date.now()
-        this.setState({
-          startTime: d,
-          isFlipped: true,
-        })
-
-      },
-          500
-      );
+      var d = Date.now();
+      this.setState({
+        startTime: d,
+        isFlipped: true,
+      });
+    }, 500);
   }
   componentWillUnmount() {
     clearInterval(this.timer);
-    window.removeEventListener('keydown')
+    // LE AGREGUE SEGUNDO PARAMETRO PQ TIRABA ERROR
+    window.removeEventListener("keydown", this.handleKeybind, false);
   }
 
-  handleKeybind = (e) =>{
-    var k = e.key.toLowerCase()
-    if(k in this.state.keybinds){
-      var f = this.state.keybinds[k]
+  handleKeybind = (e) => {
+    var k = e.key.toLowerCase();
+    if (k in this.state.keybinds) {
+      var f = this.state.keybinds[k];
 
-      if(f == this.removeLast || f == this.resetState){
-        if(!this.state.keyboardActive) f()
-      } else if(f==this.calculateCripta) f('keyboard') 
-      else f()
+      if (f == this.removeLast || f == this.resetState) {
+        if (!this.state.keyboardActive) f();
+      } else if (f == this.calculateCripta) f("keyboard");
+      else f();
     }
-  }
+  };
 
-  handleKeyboard = () =>{
-    this.setState(prevState=>({
-      keyboardActive: !prevState.keyboardActive
-    }))
+  handleKeyboard = () => {
+    this.setState((prevState) => ({
+      keyboardActive: !prevState.keyboardActive,
+    }));
     document.getElementById("kb").focus();
-  }
+  };
 
   handleChange = (e) => {
     let numbers = this.state.cards.map((card) => card.valor).slice(0, 4);
@@ -159,7 +163,8 @@ export default class AppClass extends Component {
 
   removeLast = () => {
     if (this.state.steps.length == 0) {
-      alert("Ni empezaste chanta");
+      // notify("Ni empezaste chanta");
+      notify("Ni empezaste chanta");
     } else {
       let last_type;
 
@@ -219,6 +224,7 @@ export default class AppClass extends Component {
   };
 
   shuffle = () => {
+    // PORQUE NO DEJA PONER * 4
     let randomIdx = Math.floor(Math.random() * 3);
     let newCard = randomCards(1)[0];
     let temp = this.state.cards;
@@ -228,16 +234,17 @@ export default class AppClass extends Component {
     } else {
       this.setState({
         cards: temp,
+        isFlipped: false,
       });
       this.resetState();
 
       setTimeout(() => {
-        var d = Date.now()
+        var d = Date.now();
         this.setState({
           isFlipped: true,
           startTime: d,
         });
-      }, 1000);
+      }, 600);
     }
   };
   pressCard = (idx) => {
@@ -308,7 +315,7 @@ export default class AppClass extends Component {
       (from != "keyboard" && this.state.pressed.includes(false)) ||
       (from == "keyboard" && this.state.processed.length == 0)
     ) {
-      alert("Completá la partida campeón");
+      notify("Completá la partida campeón");
     } else {
       try {
         let result = eval(
@@ -348,16 +355,16 @@ export default class AppClass extends Component {
           });
 
           if (!res.data.error) {
-            alert("Combinacion guardada!");
+            notify("Combinacion guardada!");
           } else {
-            alert("Error al guardar la combinacion");
+            notify("Error al guardar la combinacion");
           }
 
           setTimeout(() => {
             this.resetState();
-            this.setState({isFlipped:false})
+            this.setState({ isFlipped: false });
             setTimeout(() => {
-              var d = Date.now()
+              var d = Date.now();
               this.setState({
                 cards: randomCards(5),
                 startTime: d,
@@ -375,7 +382,7 @@ export default class AppClass extends Component {
         }
       } catch (error) {
         console.log(error);
-        alert(
+        notify(
           "Fijate que hayas usado los operadores correctamente o que la combinacion sea correcta"
         );
         this.resetState();
@@ -523,10 +530,11 @@ export default class AppClass extends Component {
                       <Palo className="typeUnFlipped" type={card.palo} />
                     </div>
                     <div
-                      className={`card ${!this.state.pressed[idx]
+                      className={`card ${
+                        !this.state.pressed[idx]
                           ? "cardPressable"
                           : "cardNotPressable"
-                        }`}
+                      }`}
                       onClick={() => this.pressCard(idx)}
                     >
                       <div className="cardFlipped">
@@ -545,11 +553,13 @@ export default class AppClass extends Component {
             <p id="calculation" className="calculation">
               {this.state.calculation
                 ? this.state.calculation
-                : `Target: ${this.state.cards[this.state.cards.length - 1].valor
-                }`}
+                : `Target: ${
+                    this.state.cards[this.state.cards.length - 1].valor
+                  }`}
             </p>
           </div>
         )}
+        <ToastContainer />
       </>
     );
   }
