@@ -7,8 +7,10 @@ import axios from "axios";
 import ReactCardFlip from "react-card-flip";
 import Palo from "./Palo";
 import { BsKeyboard } from "react-icons/bs";
-import { BiJoystickButton } from "react-icons/bi";
+import { BiJoystickButton, BiLogIn, BiLogOut } from "react-icons/bi";
 import { AiOutlineSend } from "react-icons/ai";
+import jwt from "jwt-decode";
+
 import {
   randomCards,
   checkIfDuplicateExists,
@@ -16,10 +18,6 @@ import {
 } from "../Utils/functions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const notify = (msg) =>
-  toast(msg, {
-    autoClose: 3000,
-  });
 
 export default class AppClass extends Component {
   constructor(props) {
@@ -46,9 +44,26 @@ export default class AppClass extends Component {
         backspace: this.removeLast,
         enter: this.calculateCripta,
       },
+      user: {},
+      token: null
     };
   }
+  notify = (msg) =>
+    toast(msg, {
+      autoClose: 3000,
+    });
+
   componentDidMount() {
+    let token = localStorage.getItem("token");
+    if (token) {
+      let data = jwt(token);
+      let {user} = data;
+      this.notify("Hola devuelta, " + user.name + "!");
+      this.setState({
+        token: token,
+        user
+      });
+    }
     this.setState({
       cards: randomCards(5),
     });
@@ -163,8 +178,8 @@ export default class AppClass extends Component {
 
   removeLast = () => {
     if (this.state.steps.length == 0) {
-      // notify("Ni empezaste chanta");
-      notify("Ni empezaste chanta");
+      // this.notify("Ni empezaste chanta");
+      this.notify("Ni empezaste chanta");
     } else {
       let last_type;
 
@@ -315,7 +330,7 @@ export default class AppClass extends Component {
       (from != "keyboard" && this.state.pressed.includes(false)) ||
       (from == "keyboard" && this.state.processed.length == 0)
     ) {
-      notify("Completá la partida campeón");
+      this.notify("Completá la partida campeón");
     } else {
       try {
         let result = eval(
@@ -323,7 +338,7 @@ export default class AppClass extends Component {
         );
 
         if (result == this.state.cards[this.state.cards.length - 1].valor) {
-          var n = Math.round((Date.now() - this.state.startTime) / 1000);
+          let n = Math.round((Date.now() - this.state.startTime) / 1000);
           this.setState({
             calculation: "Correcto! Terminaste en " + n + " s",
             counter: this.state.counter + 1,
@@ -352,12 +367,13 @@ export default class AppClass extends Component {
             ],
             target: this.state.cards[4].valor,
             combination,
-          });
+            time: this.state.token ? n : null
+          }, this.state.token ? {headers: {"authorization":`Basic ${this.state.token}`}} : {});
 
           if (!res.data.error) {
-            notify("Combinacion guardada!");
+            this.notify("Combinacion guardada!");
           } else {
-            notify("Error al guardar la combinacion");
+            this.notify("Error al guardar la combinacion");
           }
 
           setTimeout(() => {
@@ -382,7 +398,7 @@ export default class AppClass extends Component {
         }
       } catch (error) {
         console.log(error);
-        notify(
+        this.notify(
           "Fijate que hayas usado los operadores correctamente o que la combinacion sea correcta"
         );
         this.resetState();
@@ -410,6 +426,32 @@ export default class AppClass extends Component {
               <BsKeyboard className="infoIcon" color="#7D84B2" size={32} />
             ) : (
               <BiJoystickButton
+                className="infoIcon"
+                color="#7D84B2"
+                size={32}
+              />
+            )}
+          </div>
+          <div
+            className="toggleBtn"
+            onClick={() => {
+              if(this.state.token){
+                this.setState({
+                  token: null,
+                  user: {},
+                })
+                localStorage.removeItem("token");
+                window.location.href = '/login';
+              }
+              else{
+                window.location.href = '/login';
+              }
+            }}
+          >
+            {!this.state.token ? (
+              <BiLogIn className="infoIcon" color="#7D84B2" size={32} />
+            ) : (
+              <BiLogOut
                 className="infoIcon"
                 color="#7D84B2"
                 size={32}

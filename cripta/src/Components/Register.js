@@ -1,25 +1,33 @@
 import React, { Component } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default class Login extends Component {
-  constructor(props) {
-    super(props);
+export default class Register extends Component {
+  constructor() {
+    super();
     this.state = {
-      email: "fcorzini@gmail.com",
-      password: "123456",
-      URL: "https://cripta.herokuapp.com/auth/login",
+      username: "",
+      email: "",
+      password: "",
+      passwordCheck: "",
+      URL: "https://cripta.herokuapp.com/auth/register",
     };
   }
   notify = (msg) =>
     toast(msg, {
       autoClose: 3000,
     });
+
   handleSubmit = async () => {
-    if (this.state.email == "" || this.state.password == "") {
+    if (
+      this.state.password !== this.state.passwordCheck ||
+      this.state.password == "" ||
+      this.state.passwordCheck == "" ||
+      this.state.username == "" ||
+      this.state.email == ""
+    ) {
       this.notify("Please fill out all fields");
       return;
     }
@@ -27,10 +35,14 @@ export default class Login extends Component {
       fetch(this.state.URL, {
         method: "post",
         headers: {
+          Accept: "application/json",
           "Content-Type": "application/json",
-          authorization:
-            "Basic " + btoa(this.state.email + ":" + this.state.password),
         },
+        body: JSON.stringify({
+          name: this.state.username,
+          password: String(this.state.password),
+          email: this.state.email,
+        }),
       })
         .then((res) => res.json())
         .then((res) => {
@@ -40,13 +52,9 @@ export default class Login extends Component {
           }
           let { token } = res;
           this.notify(res.message);
-          localStorage.setItem("token", token);
-          setTimeout(() => {
-            window.location.href = "/play";
-          }, 500);
         });
     } catch (error) {
-      this.notify(error);
+      alert(error);
     }
   };
 
@@ -54,16 +62,23 @@ export default class Login extends Component {
     return (
       <>
         <Helmet>
-          <title>Login</title>
+          <title>Register</title>
         </Helmet>
         <div className="login">
           <div className="loginContainer">
             <input
-              value={this.state.email}
-              placeholder="email"
-              onChange={(e) => this.setState({ email: e.target.value })}
+              value={this.state.username}
+              placeholder="Username"
+              onChange={(e) => this.setState({ username: e.target.value })}
               type="text"
-              className="loginInput email"
+              className="loginInput username"
+            />
+            <input
+              value={this.state.email}
+              placeholder="Email"
+              onChange={(e) => this.setState({ email: e.target.value })}
+              type="email"
+              className="loginInput username"
             />
             <input
               value={this.state.password}
@@ -72,11 +87,18 @@ export default class Login extends Component {
               type="password"
               className="loginInput password"
             />
-            <Link to="/register" className="loginRegisterTxt">
-              Register Instead
+            <input
+              value={this.state.passwordCheck}
+              placeholder="Check password"
+              onChange={(e) => this.setState({ passwordCheck: e.target.value })}
+              type="password"
+              className="loginInput password"
+            />
+            <Link to="/login" className="loginRegisterTxt">
+              Login Instead
             </Link>
             <button onClick={() => this.handleSubmit()} className="loginBtn">
-              Login
+              Register
             </button>
             <Link className="" to="/play">
               <button className="playBtn">Play anonymously</button>
@@ -84,6 +106,7 @@ export default class Login extends Component {
           </div>
         </div>
         <ToastContainer />
+
       </>
     );
   }

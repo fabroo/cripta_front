@@ -100,7 +100,7 @@
     margin: 20px;
     display: flex;
     flex-direction: column;
-    height: 100px;
+    height: 160px;
     justify-content: space-between;
     align-items: center;
 }

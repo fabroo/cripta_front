@@ -8,7 +8,10 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-
+import jwt from 'jwt-decode'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+  
 import axios from "axios";
 import { Helmet } from "react-helmet";
 
@@ -17,11 +20,34 @@ export default class Dashboard extends Component {
     super();
     this.state = {
       data: null,
-      count: 145,
+      count: null,
       URL: "https://cripta.herokuapp.com",
+      user: {}
     };
   }
+  notify = (msg) =>
+    toast(msg, {
+      autoClose: 3000,
+    });
+
+
   async componentDidMount() {
+    if (!localStorage.getItem("token")) {
+      window.location.href = "/login";
+    }
+    let userReq = await axios.get(this.state.URL + "/user/me", {headers: {authorization: "Basic "+localStorage.getItem("token")}});
+    if(!userReq.data.error){
+      this.setState({
+        user: jwt(userReq.data.data).user,
+      })
+    }
+    else{
+      this.notify("Aca hubo engaña pichanga")
+      setTimeout(() => {
+      window.location.href = "/login";
+    }, 500);
+    }
+    
     let count = await axios.get(this.state.URL + "/stats/getCount");
     if (!count.data.error) {
       this.setState({
@@ -55,12 +81,17 @@ export default class Dashboard extends Component {
         <Helmet>
           <title>Dashboard</title>
         </Helmet>
+
         <div className="app">
           <div className="dashboardContainer">
             <div className="leftSide">
               <div className="cardInfo">
                 <p className="infoTitle">Count:</p>
                 <p className="infoCount">{this.state.count}</p>
+                <p className="infoCount">Name: {this.state.user.name}</p>
+                <p className="infoCount">Email: {this.state.user.email}</p>
+                <p className="infoCount">Average Time: {this.state.user.averageTime}</p>
+                <p className="infoCount">Amount Won: {this.state.user.amountWon}</p>
               </div>
             </div>
             <div className="divider"></div>

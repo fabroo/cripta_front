@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Game from "./Components/Game";
 import Dashboard from "./Components/Dashboard";
 import Login from "./Components/Login";
+import Register from "./Components/Register";
 
 function App() {
 
@@ -15,6 +16,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Login/>} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/register" element={<Register/>} />
           <Route path="/play" element={<Game/>} />
           <Route path="/stats" element={<Dashboard/>} />
           <Route path="*" element={<NotFound/>} />
