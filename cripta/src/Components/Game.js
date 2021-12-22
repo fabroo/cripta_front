@@ -7,9 +7,12 @@ import axios from "axios";
 import ReactCardFlip from "react-card-flip";
 import Palo from "./Palo";
 import { BsKeyboard } from "react-icons/bs";
+import { GiPodium } from "react-icons/gi";
 import { BiJoystickButton, BiLogIn, BiLogOut } from "react-icons/bi";
 import { AiOutlineSend } from "react-icons/ai";
+import { MdOutlineQueryStats } from "react-icons/md";
 import jwt from "jwt-decode";
+import ReactTooltip from "react-tooltip";
 
 import {
   randomCards,
@@ -45,23 +48,24 @@ export default class AppClass extends Component {
         enter: this.calculateCripta,
       },
       user: {},
-      token: null
+      token: null,
     };
   }
   notify = (msg) =>
     toast(msg, {
       autoClose: 3000,
+      pauseOnHover: false,
     });
 
   componentDidMount() {
     let token = localStorage.getItem("token");
     if (token) {
       let data = jwt(token);
-      let {user} = data;
-      this.notify("Hola devuelta, " + user.name + "!");
+      let { user } = data;
+      this.notify("Hola de vuelta, " + user.username + "!");
       this.setState({
         token: token,
-        user
+        user,
       });
     }
     this.setState({
@@ -358,17 +362,23 @@ export default class AppClass extends Component {
             }
           }
 
-          let res = await axios.post(`${this.state.URL}/newCombination`, {
-            cards: [
-              this.state.cards[0].valor,
-              this.state.cards[1].valor,
-              this.state.cards[2].valor,
-              this.state.cards[3].valor,
-            ],
-            target: this.state.cards[4].valor,
-            combination,
-            time: this.state.token ? n : null
-          }, this.state.token ? {headers: {"authorization":`Basic ${this.state.token}`}} : {});
+          let res = await axios.post(
+            `${this.state.URL}/newCombination`,
+            {
+              cards: [
+                this.state.cards[0].valor,
+                this.state.cards[1].valor,
+                this.state.cards[2].valor,
+                this.state.cards[3].valor,
+              ],
+              target: this.state.cards[4].valor,
+              combination,
+              time: this.state.token ? n : null,
+            },
+            this.state.token
+              ? { headers: { authorization: `Basic ${this.state.token}` } }
+              : {}
+          );
 
           if (!res.data.error) {
             this.notify("Combinacion guardada!");
@@ -409,10 +419,11 @@ export default class AppClass extends Component {
     return (
       <>
         <div className="topContainer">
-          <div className="infoBtn" onClick={() => alert("reglas cripta smh")}>
+          <div data-tip="Info" className="infoBtn" onClick={() => alert("reglas cripta smh")}>
             <Info />
           </div>
           <div
+          data-tip= {this.state.keyboardActive ? "Controles" : "Teclado"}
             className="toggleBtn"
             onClick={() => {
               this.setState({
@@ -433,29 +444,51 @@ export default class AppClass extends Component {
             )}
           </div>
           <div
+            data-tip="Estadisticas"
             className="toggleBtn"
             onClick={() => {
-              if(this.state.token){
+              window.location.href = "/stats";
+            }}
+          >
+            <MdOutlineQueryStats
+              className="infoIcon"
+              color="#7D84B2"
+              size={32}
+            />
+          </div>
+          <div
+            data-tip="Podio"
+            className="toggleBtn"
+            onClick={() => {
+              window.location.href = "/podio";
+            }}
+          >
+            <GiPodium
+              className="infoIcon"
+              color="#7D84B2"
+              size={32}
+            />
+          </div>
+          <div
+            data-tip={this.state.token ? "Logout" : "Login"}
+            className="toggleBtn"
+            onClick={() => {
+              if (this.state.token) {
                 this.setState({
                   token: null,
                   user: {},
-                })
+                });
                 localStorage.removeItem("token");
-                window.location.href = '/login';
-              }
-              else{
-                window.location.href = '/login';
+                window.location.href = "/login";
+              } else {
+                window.location.href = "/login";
               }
             }}
           >
             {!this.state.token ? (
               <BiLogIn className="infoIcon" color="#7D84B2" size={32} />
             ) : (
-              <BiLogOut
-                className="infoIcon"
-                color="#7D84B2"
-                size={32}
-              />
+              <BiLogOut className="infoIcon" color="#7D84B2" size={32} />
             )}
           </div>
         </div>
@@ -602,6 +635,7 @@ export default class AppClass extends Component {
           </div>
         )}
         <ToastContainer />
+        <ReactTooltip place="left" type="dark" effect="solid" />
       </>
     );
   }

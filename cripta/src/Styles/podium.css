@@ -1,0 +1,11 @@
+
+.podiumContainter{
+    height: 80%;
+    width: 80%;
+    background-color: red;
+    display: flex;
+    border-radius: 15px;
+}
+.podiumTitle{
+    text-align: center;
+}

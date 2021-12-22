@@ -7,6 +7,7 @@ import * as serviceWorker from './serviceWorker';
 import './Styles/cards.css';
 import './Styles/global.css';
 import './Styles/dashboard.css';
+import './Styles/podium.css';
 import './Styles/login.css';
 import './Styles/responsive.css';
 

@@ -17,6 +17,7 @@ export default class Register extends Component {
   }
   notify = (msg) =>
     toast(msg, {
+      pauseOnHover: false,
       autoClose: 3000,
     });
 

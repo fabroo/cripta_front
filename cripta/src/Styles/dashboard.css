@@ -1,48 +1,65 @@
-.app{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;    
+.app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.dashboardContainer{
-    height: 80%;
-    width: 80%;
-    background-color: #D1DCEE;
-    display: flex;
-    border-radius: 15px;
+.dashboardContainer {
+  height: 80%;
+  width: 80%;
+  background-color: #d1dcee;
+  display: flex;
+  border-radius: 15px;
 }
-.leftSide{
-    width:30%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.leftSide {
+  width: 30%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
-.divider{
-    width: 2px;
-    height: 90%;
-    margin: auto;
-    background-color: rgb(235, 235, 235);
+.divider {
+  width: 5px;
+  height: 100%;
+  margin: auto;
+  background-color: rgb(225, 227, 255);
 }
-.infoTitle{
+
+.topContainerDashboard {
+  height: 160px;
+}
+.infoCount {
+  text-align: center;
+}
+.leftSide {
+  justify-content: center;
+}
+.infoTitle {
     font-size: 50px;
     font-weight: 700;
-    margin: 3rem auto auto 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: 2rem;
     margin-left: 2rem;
 }
-.infoCount{
-    margin-top: 1rem;
-    text-align: center;
-    font-size: 40px;
+.infoCountHeader {
+  margin-top: 1rem;
+  font-weight: 700;
+  font-size: 30px;
 }
-.rightSide{
-    width:70%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.infoCountValue {
+  font-size: 20px;
 }
-.graph{
-    width: 90%;
-    height: 60%;
+.rightSide {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.graph {
+  width: 90%;
+  height: 60%;
 }

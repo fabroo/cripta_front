@@ -16,6 +16,7 @@ export default class Login extends Component {
   }
   notify = (msg) =>
     toast(msg, {
+      pauseOnHover: false,
       autoClose: 3000,
     });
   handleSubmit = async () => {

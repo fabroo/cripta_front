@@ -4,6 +4,7 @@ import Game from "./Components/Game";
 import Dashboard from "./Components/Dashboard";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
+import Podium from "./Components/Podium";
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
           <Route path="/play" element={<Game/>} />
+          <Route path="/podio" element={<Podium/>} />
           <Route path="/stats" element={<Dashboard/>} />
           <Route path="*" element={<NotFound/>} />
       
