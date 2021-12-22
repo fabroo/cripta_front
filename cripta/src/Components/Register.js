@@ -40,7 +40,7 @@ export default class Register extends Component {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: this.state.username,
+          username: this.state.username,
           password: String(this.state.password),
           email: this.state.email,
         }),
