@@ -2,50 +2,64 @@
     width: 100vw;
     height: 100vh;
     background-color: #f2f2f2;
+    background-color: #f2f2f2;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 .loginContainer{
-    width:30%;
-    height:60%;
+    width:20%;
+    height:55%;
     display: flex;
     flex-direction: column;
-    /* background-color: red; */
+    background-color: #dddddd;
+    border-radius: 10px;
     justify-content: center;
     align-items: center;
     text-align: end;
 }
 .loginInput{
     background-color: rgb(230, 230, 230);
-    border:none;
-    width: 70%;
-    padding-top: 10px;
+    width: 60%;
     height: 40px;
-    border-bottom: 2px solid #8E9DCC;
+    border: 2px solid #a3a8b8;
     text-align: center;
     margin: .5rem 0 .5rem 0;
+    transition: all .3s;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: lighter;
 
 }
+.loginInput:focus{
+    border: 2px solid #8E9DCC;
+
+}
+
+.loginRegisterTxt:hover{
+    color: rgb(126, 126, 126);
+}
 .loginRegisterTxt{
-    width: 70%;
+    width: 60%;
     margin: 1rem 0 1rem 0;
     cursor: pointer;
     color: rgb(155, 155, 155);
+    transition: all .3s;
+    margin-bottom: 2rem;
 }
 
 .loginBtn:hover, .playBtn:hover{
-    transform: scale(1.01);
-    background-color: #7d92d3;
+    background-color: #8d9fd4;
 }
 
 .loginBtn, .playBtn{
     height: 40px;
     width: 180px;
-        background-color: #8E9DCC;
-    border-radius: 25px;
+    background-color: #8E9DCC;
+    border-radius: 15px;
     border: none;
     font-size: 16px;
+    font-weight: lighter;
     color: white;
     cursor: pointer;
     transition: all .3s;
@@ -53,6 +67,6 @@
 
 .playBtn{
     font-size: 16px;
-    margin-top: 1rem;
+    margin-top: 2rem;
 
 }

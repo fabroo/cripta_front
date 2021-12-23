@@ -1,11 +1,55 @@
 
-.podiumContainter{
+.podiumContainer{
     height: 80%;
     width: 80%;
-    background-color: red;
+    background-color: #d1dcee;
     display: flex;
     border-radius: 15px;
+    flex-direction: column;
+    align-items: center;    
 }
 .podiumTitle{
-    text-align: center;
+    font-size: 50px;
+    font-weight: 700;
+    margin-top: 2rem;
+}
+.podiumSubtitle{
+    
+    margin-top: 2rem;
+    font-weight: 500;
+    font-size: 25px;
+}
+.top5Container{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}
+.top5ItemName{
+    transition: all .3s;
+}
+.top5ItemName:hover{
+    color: rgb(126, 126, 126);
+    cursor: pointer;
+}
+.top5Item, .top5info{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+.top5info{
+    font-size: 20px;
+    font-weight: 700;
+}
+.top5Item{
+    padding: 0 1rem;
+    background-color: rgb(175, 183, 226);
+    height: 35px;
+    border-radius: 10px;
+}
+.horizontalDivider{
+    width: 50%;
+    height: 3px;
+    background-color: rgb(225, 227, 255);
 }

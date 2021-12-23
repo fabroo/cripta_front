@@ -16,6 +16,7 @@ export default class Podium extends Component {
       token: localStorage.getItem("token"),
       URL: "https://cripta.herokuapp.com/stats",
       top5: null,
+      top5Avg: null,
     };
   }
   componentDidMount() {
@@ -30,12 +31,23 @@ export default class Podium extends Component {
           });
         }
       });
+    fetch(this.state.URL + "/topAverageTime", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+          if (!res.error) {
+          this.setState({
+            top5Avg: res.data,
+          });
+        }
+      });
   }
   render() {
     return (
       <>
         <Helmet>
-          <title>Dashboard</title>
+          <title>Podio</title>
         </Helmet>
         <div className="topContainer topContainerDashboard">
           <div
@@ -83,25 +95,55 @@ export default class Podium extends Component {
             )}
           </div>
         </div>
-        <div className="app">
+        <div className="app podiumApp">
+          {!this.state.top5 || !this.state.top5Avg ? (
+            <Loader width={150} />
+          ) : (
             <div className="podiumContainer">
-            <p className="podiumTitle">Podio</p>
-            <div className="top5Container">
-              {!this.state.top5 ? (
-                <Loader width={150} />
-              ) : (
-                this.state.top5.map((item, index) => {
+              <p className="podiumTitle">Podio</p>
+              <p className="podiumSubtitle">Top Amount</p>
+              <div
+                style={{ height: `${this.state.top5.length * 100}px` }}
+                className="top5Container"
+              >
+                <div className="top5info">
+                  <p>Puesto</p>
+                  <p>User</p>
+                  <p>N° Won</p>
+                </div>
+                {this.state.top5.map((item, index) => {
                   return (
                     <div className="top5Item" key={index}>
                       <p className="top5ItemNumber">{index + 1}</p>
-                      <p className="top5ItemName">{item.username}</p>
+                      <p className="top5ItemName">@{item.username}</p>
                       <p className="top5ItemAmount">{item.amountWon}</p>
                     </div>
                   );
-                })
-              )}
+                })}
+              </div>
+              <div className="horizontalDivider"></div>
+              <p className="podiumSubtitle">Average Time</p>
+              <div
+                style={{ height: `${this.state.top5.length * 100}px` }}
+                className="top5Container"
+              >
+                <div className="top5info">
+                  <p>Puesto</p>
+                  <p>User</p>
+                  <p>Time (s)</p>
+                </div>
+                {this.state.top5Avg.map((item, index) => {
+                  return (
+                    <div className="top5Item" key={index}>
+                      <p className="top5ItemNumber">{index + 1}</p>
+                      <p className="top5ItemName">@{item.username}</p>
+                      <p className="top5ItemAmount">{item.averageTime}</p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            </div>
+          )}
         </div>
         <ReactTooltip place="left" type="dark" effect="solid" />
       </>

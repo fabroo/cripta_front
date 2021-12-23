@@ -14,6 +14,12 @@ export default class Login extends Component {
       URL: "https://cripta.herokuapp.com/auth/login",
     };
   }
+  componentDidMount() {
+    if (localStorage.getItem("token")) {
+      window.location.href = "/play";
+    }
+  }
+
   notify = (msg) =>
     toast(msg, {
       pauseOnHover: false,
@@ -61,7 +67,7 @@ export default class Login extends Component {
           <div className="loginContainer">
             <input
               value={this.state.email}
-              placeholder="email"
+              placeholder="User or Email"
               onChange={(e) => this.setState({ email: e.target.value })}
               type="text"
               className="loginInput email"

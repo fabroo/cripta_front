@@ -15,6 +15,11 @@ export default class Register extends Component {
       URL: "https://cripta.herokuapp.com/auth/register",
     };
   }
+  componentDidMount() {
+    if (localStorage.getItem("token")) {
+      window.location.href = "/play";
+    }
+  }
   notify = (msg) =>
     toast(msg, {
       pauseOnHover: false,
@@ -53,6 +58,10 @@ export default class Register extends Component {
           }
           let { token } = res;
           this.notify(res.message);
+          localStorage.setItem("token", token);
+          setTimeout(() => {
+            window.location.href ="/play";
+          }, 500);
         });
     } catch (error) {
       alert(error);
