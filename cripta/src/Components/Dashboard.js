@@ -5,6 +5,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
+  Label,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
@@ -154,6 +155,8 @@ export default class Dashboard extends Component {
                   <p className="infoCount infoCountValue">{this.state.user.averageTime ? this.state.user.averageTime+"''"  :null}</p>
                   <p className="infoCount infoCountHeader">Amount Won: </p>
                   <p className="infoCount infoCountValue">{this.state.user.amountWon}</p>
+                  <p className="infoCount infoCountHeader">Global Won: </p>
+                  <p className="infoCount infoCountValue">{this.state.count}</p>
                 </div>
             </div>
             <div className="rightSide">
@@ -162,6 +165,7 @@ export default class Dashboard extends Component {
                   {this.state.data && (
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart
+                      
                         width={500}
                         height={400}
                         cx="50%"
@@ -173,8 +177,10 @@ export default class Dashboard extends Component {
                           bottom: 0,
                         }}
                       >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
+                        <CartesianGrid  strokeDasharray="3 3" />
+                        <XAxis dataKey="name" >
+                        <Label value="Pages of my website" offset={0} position="bottom" />
+                        </XAxis>
                         <YAxis />
                         <Tooltip />
                         <Area
@@ -183,8 +189,10 @@ export default class Dashboard extends Component {
                           stroke="#6188c4"
                           fill="#99b2d9"
                         />
+
                       </AreaChart>
                     </ResponsiveContainer>
+                    
                   )}
                 </div>
               

@@ -9,8 +9,8 @@ export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "fcorzini@gmail.com",
-      password: "123456",
+      email: "",
+      password: "",
       URL: "https://cripta.herokuapp.com/auth/login",
     };
   }

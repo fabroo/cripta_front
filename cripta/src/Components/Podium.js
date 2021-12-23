@@ -36,7 +36,7 @@ export default class Podium extends Component {
     })
       .then((res) => res.json())
       .then((res) => {
-          if (!res.error) {
+        if (!res.error) {
           this.setState({
             top5Avg: res.data,
           });
@@ -102,15 +102,13 @@ export default class Podium extends Component {
             <div className="podiumContainer">
               <p className="podiumTitle">Podio</p>
               <p className="podiumSubtitle">Top Amount</p>
-              <div
-                style={{ height: `${this.state.top5.length * 100}px` }}
-                className="top5Container"
-              >
-                <div className="top5info">
-                  <p>Puesto</p>
-                  <p>User</p>
-                  <p>N° Won</p>
-                </div>
+              <div className="top5info">
+                <p>Puesto</p>
+                <p>User</p>
+                <p>N° Won</p>
+              </div>
+              <div className="top5Container">
+                <div className="scroll">
                 {this.state.top5.map((item, index) => {
                   return (
                     <div className="top5Item" key={index}>
@@ -120,18 +118,18 @@ export default class Podium extends Component {
                     </div>
                   );
                 })}
-              </div>
-              <div className="horizontalDivider"></div>
-              <p className="podiumSubtitle">Average Time</p>
-              <div
-                style={{ height: `${this.state.top5.length * 100}px` }}
-                className="top5Container"
-              >
-                <div className="top5info">
-                  <p>Puesto</p>
-                  <p>User</p>
-                  <p>Time (s)</p>
                 </div>
+              </div>
+              {/* <div className="horizontalDivider"></div> */}
+              <br />
+              <p className="podiumSubtitle">Average Time</p>
+              <div className="top5info">
+                <p>Puesto</p>
+                <p>User</p>
+                <p>Time (s)</p>
+              </div>
+              <div className="top5Container">
+                <div className="scroll">
                 {this.state.top5Avg.map((item, index) => {
                   return (
                     <div className="top5Item" key={index}>
@@ -141,6 +139,7 @@ export default class Podium extends Component {
                     </div>
                   );
                 })}
+                </div>
               </div>
             </div>
           )}
