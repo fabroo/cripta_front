@@ -8,7 +8,7 @@ export const randomCards = (n) => {
 
   for (let i = 0; i < n; i++) {
     cards.push({
-      valor: Math.ceil(Math.random() * 11),
+      valor: Math.floor(Math.random() * (12)) + 1,
       palo: types[Math.floor(Math.random() * 4)],
     });
   }
